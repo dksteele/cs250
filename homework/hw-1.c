@@ -11,14 +11,14 @@ int main(int argc, char* argv[]){
 	int s;
 	struct sockaddr_in addr;
 	
-	if(argc != 2){
+	if(argc != 3){
 		printf("Usage: %s <server_port>\n", argv[0]);
 		return 0;
 	}
 	
 	memset(&addr, '0', sizeof(addr));
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(atoi(argv[1]));
+	addr.sin_port = htons(atoi(argv[2]));
 	
 	if(inet_pton(AF_INET, argv[1], &addr.sin_addr) <= 0){
 		printf("Error Parsing Ip Address: %s\n", argv[1]);
