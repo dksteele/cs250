@@ -32,6 +32,11 @@ int main(int argc, char* argv[]){
 		printf("Error Creating Socket\n");
 		return 0;
 	}
+
+	struct timeval to;
+	to.tv_sec = 10;
+	to.tv_usec = 0;
+	setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &to, sizeof(to));
 	
 	if(connect(s, (struct sockaddr *)&addr, sizeof(addr)) < 0){
 		printf("Error Creating Connection\n");
@@ -55,12 +60,8 @@ int main(int argc, char* argv[]){
 		while(!last_line){
 			memset(&buf, '\0', sizeof(buf));
 			
-			if(!recv(s, buf, BUFFER_SIZE, 0)){
-				printf("Connection Terminated\n");
-				return 1;
-			}
-			
-			if(buf[strlen(buf) - 1] == EOF){
+			int ret = recv(s, buf, BUFFER_SIZE, 0);
+			if(!ret || buf[strlen(buf) - 1] == EOF){
 				buf[strlen(buf) - 1] = '\0'; //Replace EOF with null
 				last_line = 1;
 			}
