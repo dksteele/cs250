@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
 	getcwd(cwd, BUFFER_SIZE);
 	
 	if(argc != 2){
-		printf("Usage: %s <server_ip_address> <server_port>\n", argv[0]);
+		printf("Usage: %s <server_port>\n", argv[0]);
 		return 0;
 	}
 	
@@ -65,8 +65,6 @@ int main(int argc, char* argv[]){
 				path[strlen(cwd)] = '/';
 				memcpy(&path[strlen(cwd) + 1], buf, strlen(buf));
 				path[strlen(buf) + strlen(cwd) + 1] = '\0';
-				
-				printf("%s\n", path);
 			
 				FILE *file = fopen(path, "r");
 				if(file == NULL){
