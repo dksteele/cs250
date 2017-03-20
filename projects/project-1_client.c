@@ -1,4 +1,5 @@
 #include <sys/socket.h>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <stdlib.h>
@@ -13,9 +14,10 @@ int main(int argc, char* argv[]){
 	
 	int s;
 	struct sockaddr_in addr;
+	struct hostent *host_ip;
 	
 	if(argc != 3){
-		printf("Usage: %s <server_ip_address> <server_port>\n", argv[0]);
+		printf("Usage: %s <server_hostname> <server_port>\n", argv[0]);
 		return 0;
 	}
 	
@@ -23,10 +25,14 @@ int main(int argc, char* argv[]){
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(atoi(argv[2]));
 	
-	if(inet_pton(AF_INET, argv[1], &addr.sin_addr) <= 0){
-		printf("Error Parsing Ip Address: %s\n", argv[1]);
+	
+	
+	if((host_ip = gethostbyname(argv[1])) <= 0){
+		printf("Hostname Error: %s\n", argv[1]);
 		return 0;
 	}
+	
+	addr.sin_addr = *(struct in_addr *) host_ip->h_addr;
 	
 	if((s = socket(AF_INET, SOCK_STREAM, 0)) < 0){
 		printf("Error Creating Socket\n");
@@ -39,7 +45,7 @@ int main(int argc, char* argv[]){
 	setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &to, sizeof(to));
 	
 	if(connect(s, (struct sockaddr *)&addr, sizeof(addr)) < 0){
-		printf("Error Creating Connection\n");
+		printf("Unable To Connect\n");
 		return 0;
 	}
 	
