@@ -34,7 +34,7 @@ int main(int argc, char* argv[]){
 	}
 	
 	if(connect(s, (struct sockaddr *)&addr, sizeof(addr)) < 0){
-		printf("Error Creating Connection\n");
+		printf("Unable To Connect\n");
 		return 0;
 	}
 	
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]){
 			memset(&buf, '\0', sizeof(buf));
 			
 			if(!recv(s, buf, BUFFER_SIZE, 0)){
-				printf("Connection Terminated\n");
+				printf("Server Not Responding\n");
 				return 1;
 			}
 			
