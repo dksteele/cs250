@@ -26,10 +26,16 @@ int main(int argc, char* argv[]){
 		return 0;
 	}
 	
+	
 	if((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0){
 		printf("Error Creating Socket\n");
 		return 0;
 	}
+	
+	struct timeval to;
+	to.tv_sec = 10;
+	to.tv_usec = 0;
+	setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &to, sizeof(to));
 	
 	while(1){
 	
@@ -40,7 +46,8 @@ int main(int argc, char* argv[]){
 		sendto(s, out, strlen(out), 0, (struct sockaddr*) &addr, sizeof(addr));
 		
 		in = (char*) malloc(sizeof(char) * strlen(out));
-		recvfrom(s, in, strlen(out), 0, (struct sockaddr*) &addr, &slen);
+		if(recvfrom(s, in, strlen(out), 0, (struct sockaddr*) &addr, &slen) < 0)
+			printf("ERROR RECIEVING");
 		
 		printf("%s\n", in);
 	}

@@ -66,17 +66,8 @@ int main(int argc, char* argv[]){
 		while(!last_line){
 			memset(&buf, '\0', sizeof(buf));
 			
-<<<<<<< HEAD
-			if(!recv(s, buf, BUFFER_SIZE, 0)){
-				printf("Server Not Responding\n");
-				return 1;
-			}
-			
-			if(buf[strlen(buf) - 1] == EOF){
-=======
 			int ret = recv(s, buf, BUFFER_SIZE, 0);
 			if(!ret || buf[strlen(buf) - 1] == EOF){
->>>>>>> 0346e3e8eca47f0f621aac9172abdec8f2712c19
 				buf[strlen(buf) - 1] = '\0'; //Replace EOF with null
 				last_line = 1;
 			}
