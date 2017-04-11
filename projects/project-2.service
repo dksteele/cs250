@@ -1,7 +1,7 @@
 [Unit]
-Description=
+Description=Project 2
 After=networking.service
 [Service]
-ExecStart=
+ExecStart=/usr/bin/project-2_service 12345
 [Install]
 WantedBy=multi-user.target
