@@ -27,7 +27,8 @@ void recieve_signal_handler(int sig_type)
 		perror("Recieving");
 	}
 	recv_buf[num_chars] = '\0';
-	printf("%s\n", recv_buf);
+	if(strcmp(last_msg, recv_buf) != 0)
+		printf("%s", recv_buf);
 }
 
 int main(int argc, char* argv[]){
@@ -80,9 +81,10 @@ int main(int argc, char* argv[]){
 	}
 	
 	if(fcntl(sock, F_SETFL, O_ASYNC)){
-		perror("Setting async and nonblocking");
+		perror("Setting async ");
 		return 0;
 	}
+	
 	
 	while(1){
 		
