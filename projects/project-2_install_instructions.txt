@@ -1,0 +1,12 @@
+OS:  Ubuntu 16.04 LTS
+
+gcc -o project-2_server project-2_server.c
+gcc -o project-2_client project-2_client.c
+sudo cp project-2_server /usr/bin/
+sudo cp project-2.service /etc/systemd/system/
+sudo systemctl enable project-2.service
+sudo systemctl start project-2.service //In the future it will start at boot
+
+
+To run the client form the projects directory run (Default server port is 12345):
+./project-2_client <server_ip> <server_port>

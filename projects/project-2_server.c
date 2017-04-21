@@ -6,11 +6,14 @@
 #include <stdio.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include <syslog.h>
 #include <unistd.h>
 
 
 #define BUFFER_SIZE 1024
 int main(int argc, char* argv[]){
+	
+	openlog(NULL, LOG_CONS | LOG_PID, LOG_DAEMON);
 	
 	int sock;
 	struct sockaddr_in serv_addr, broad_addr, cli_addr;
@@ -18,7 +21,7 @@ int main(int argc, char* argv[]){
 	char recv_buf[BUFFER_SIZE];
 	
 	if(argc != 2){
-		printf("Usage: %s <server_port>\n", argv[0]);
+		syslog(LOG_ERR, "Incorrect Usage\n");
 		return 0;
 	}
 	
@@ -33,12 +36,12 @@ int main(int argc, char* argv[]){
 	broad_addr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
 	
 	if((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0){
-		perror("Creating Socket\n");
+		syslog(LOG_ERR, "Creating Socket\n");
 		return 0;
 	}
 
 	if(bind(sock, (struct sockaddr* ) &serv_addr, sizeof(serv_addr))){
-		perror("Binding Socket\n");
+		syslog(LOG_ERR, "Binding Socket\n");
 		return 0;
 	}
 	
@@ -49,18 +52,16 @@ int main(int argc, char* argv[]){
 		int num_chars = 0;
 		if((num_chars = recvfrom(sock, recv_buf, BUFFER_SIZE, 0, (struct sockaddr*) &cli_addr, &slen))){
 			recv_buf[num_chars] = '\0';
-			if(sendto(sock, recv_buf, strlen(recv_buf), 0, (struct sockaddr *) &broad_addr, sizeof(broad_addr)))
-				printf("Relayed");
-			else
-				perror("Send");
+			if(!sendto(sock, recv_buf, strlen(recv_buf), 0, (struct sockaddr *) &broad_addr, sizeof(broad_addr)))
+				syslog(LOG_ERR, "Send Failed");
 			
 		}else{
-			perror("Recieve");
+			syslog(LOG_ERR, "Recieve Failed");
 		}
 	}
 	
 	
 	close(sock);
-
+	closelog();
 	return 0;
 }
