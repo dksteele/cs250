@@ -1,3 +1,5 @@
+OS:  Ubuntu 16.04 LTS
+
 gcc -o project-2_server project-2_server.c
 gcc -o project-2_client project-2_client.c
 sudo cp project-2_server /usr/bin/
